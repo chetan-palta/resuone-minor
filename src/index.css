@@ -1,0 +1,206 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=Lora:wght@400;500;600;700&family=Roboto:wght@400;500;700&family=Source+Sans+3:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* ResuOne White + Blue Professional Palette */
+    --background: 0 0% 100%;
+    --foreground: 220 30% 15%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 220 30% 15%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 30% 15%;
+
+    /* Primary Blue */
+    --primary: 217 91% 50%;
+    --primary-foreground: 0 0% 100%;
+    --primary-light: 217 91% 95%;
+    --primary-dark: 217 91% 40%;
+
+    /* Secondary - Light Gray Blue */
+    --secondary: 220 20% 96%;
+    --secondary-foreground: 220 30% 25%;
+
+    --muted: 220 15% 95%;
+    --muted-foreground: 220 15% 45%;
+
+    /* Accent - Lighter Blue */
+    --accent: 217 80% 94%;
+    --accent-foreground: 217 91% 35%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 220 20% 90%;
+    --input: 220 20% 90%;
+    --ring: 217 91% 50%;
+
+    --radius: 0.75rem;
+
+    /* Sidebar */
+    --sidebar-background: 220 20% 98%;
+    --sidebar-foreground: 220 30% 25%;
+    --sidebar-primary: 217 91% 50%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 217 80% 94%;
+    --sidebar-accent-foreground: 217 91% 35%;
+    --sidebar-border: 220 20% 90%;
+    --sidebar-ring: 217 91% 50%;
+
+    /* Custom ResuOne tokens */
+    --resume-paper: 0 0% 100%;
+    --resume-text: 220 30% 15%;
+    --resume-heading: 217 91% 35%;
+    --resume-muted: 220 15% 55%;
+    --resume-border: 220 20% 85%;
+    
+    /* Gradients */
+    --gradient-hero: linear-gradient(135deg, hsl(217, 91%, 50%) 0%, hsl(217, 91%, 65%) 100%);
+    --gradient-subtle: linear-gradient(180deg, hsl(220, 20%, 98%) 0%, hsl(0, 0%, 100%) 100%);
+    
+    /* Shadows */
+    --shadow-card: 0 4px 20px -4px hsl(217 91% 50% / 0.12);
+    --shadow-elevated: 0 10px 40px -10px hsl(217 91% 50% / 0.2);
+    --shadow-resume: 0 4px 24px -6px hsl(220 30% 15% / 0.15);
+  }
+
+  .dark {
+    --background: 220 25% 8%;
+    --foreground: 220 20% 95%;
+
+    --card: 220 25% 12%;
+    --card-foreground: 220 20% 95%;
+
+    --popover: 220 25% 12%;
+    --popover-foreground: 220 20% 95%;
+
+    --primary: 217 91% 60%;
+    --primary-foreground: 220 25% 8%;
+    --primary-light: 217 50% 20%;
+    --primary-dark: 217 91% 70%;
+
+    --secondary: 220 20% 18%;
+    --secondary-foreground: 220 20% 90%;
+
+    --muted: 220 20% 18%;
+    --muted-foreground: 220 15% 60%;
+
+    --accent: 217 50% 20%;
+    --accent-foreground: 217 91% 75%;
+
+    --destructive: 0 62% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 220 20% 20%;
+    --input: 220 20% 20%;
+    --ring: 217 91% 60%;
+
+    --sidebar-background: 220 25% 10%;
+    --sidebar-foreground: 220 20% 90%;
+    --sidebar-primary: 217 91% 60%;
+    --sidebar-primary-foreground: 220 25% 8%;
+    --sidebar-accent: 217 50% 20%;
+    --sidebar-accent-foreground: 217 91% 75%;
+    --sidebar-border: 220 20% 20%;
+    --sidebar-ring: 217 91% 60%;
+
+    --resume-paper: 220 25% 12%;
+    --resume-text: 220 20% 90%;
+    --resume-heading: 217 91% 70%;
+    --resume-muted: 220 15% 60%;
+    --resume-border: 220 20% 25%;
+
+    --gradient-hero: linear-gradient(135deg, hsl(217, 91%, 45%) 0%, hsl(217, 70%, 55%) 100%);
+    --gradient-subtle: linear-gradient(180deg, hsl(220, 25%, 10%) 0%, hsl(220, 25%, 8%) 100%);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display;
+  }
+}
+
+@layer components {
+  .btn-hero {
+    @apply bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg hover:shadow-xl transition-all duration-300;
+  }
+
+  .btn-ghost-hero {
+    @apply bg-white/10 text-white border border-white/20 hover:bg-white/20 backdrop-blur-sm transition-all duration-300;
+  }
+
+  .card-elevated {
+    box-shadow: var(--shadow-card);
+    @apply transition-shadow duration-300 hover:shadow-lg;
+  }
+
+  .resume-paper {
+    background: hsl(var(--resume-paper));
+    box-shadow: var(--shadow-resume);
+    @apply rounded-lg;
+  }
+
+  .section-drag-handle {
+    @apply cursor-grab active:cursor-grabbing;
+  }
+}
+
+@layer utilities {
+  .gradient-hero {
+    background: var(--gradient-hero);
+  }
+
+  .gradient-subtle {
+    background: var(--gradient-subtle);
+  }
+
+  .text-gradient {
+    background: var(--gradient-hero);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+}
+
+/* Print styles for resume export */
+@media print {
+  .resume-preview {
+    box-shadow: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: hsl(var(--muted));
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--muted-foreground) / 0.3);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground) / 0.5);
+}
