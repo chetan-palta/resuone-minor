@@ -1,15 +1,18 @@
 import { useState, useEffect, useCallback } from "react";
 import { Link, useSearchParams, useNavigate } from "react-router-dom";
-import { FileText, Download, RotateCcw, Eye, EyeOff, Settings2, Save, ArrowLeft, Upload } from "lucide-react";
+import { FileText, Download, RotateCcw, Eye, EyeOff, Settings2, Save, ArrowLeft, Upload, Lightbulb } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { useResumeStore } from "@/hooks/useResumeStore";
 import { useAuth } from "@/hooks/useAuth";
 import { ResumeForm } from "@/components/resume/ResumeForm";
 import { ResumePreview } from "@/components/resume/ResumePreview";
 import { ExportDialog } from "@/components/resume/ExportDialog";
 import { TemplateSelector } from "@/components/resume/TemplateSelector";
-import { ResumeImport } from "@/components/resume/ResumeImport";
+import { ImportResume } from "@/components/resume/ImportResume";
+import { SuggestionsPanel } from "@/components/resume/SuggestionsPanel";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { toast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { ResumeData } from "@/types/resume";
@@ -23,6 +26,10 @@ export default function Editor() {
   const [showPreview, setShowPreview] = useState(true);
   const [exportOpen, setExportOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [importOpen, setImportOpen] = useState(false);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [suggestions, setSuggestions] = useState<any[]>([]);
+  const [atsScore, setAtsScore] = useState(0);
   const [resumeId, setResumeId] = useState<string | null>(null);
   const [resumeTitle, setResumeTitle] = useState("Untitled Resume");
   const [isSaving, setIsSaving] = useState(false);
@@ -66,7 +73,67 @@ export default function Editor() {
   };
 
   const saveToDatabase = useCallback(async () => {
-    if (!isAuthenticated || !resumeId) return;
+    if (!isAuthenticated) {
+      toast({
+        title: "Sign in required",
+        description: "Please sign in to save your resume",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!resumeId) {
+      // Create new resume
+      setIsSaving(true);
+      try {
+        // Check 5-resume limit
+        const { data: existingResumes, error: countError } = await supabase
+          .from('resumes')
+          .select('id')
+          .eq('user_id', user?.id);
+
+        if (countError) throw countError;
+
+        if (existingResumes && existingResumes.length >= 5) {
+          toast({
+            title: "Resume limit reached",
+            description: "You can save up to 5 resumes. Please delete one to save a new one.",
+            variant: "destructive",
+          });
+          setIsSaving(false);
+          return;
+        }
+
+        const { data, error } = await supabase
+          .from('resumes')
+          .insert({
+            title: resumeTitle,
+            data: JSON.parse(JSON.stringify(store.resume)),
+            template_id: store.resume.templateId,
+            user_id: user?.id,
+          })
+          .select()
+          .single();
+
+        if (error) throw error;
+        
+        setResumeId(data.id);
+        toast({
+          title: "Saved",
+          description: "Your resume has been saved",
+        });
+      } catch (error: any) {
+        console.error('Error saving resume:', error);
+        toast({
+          title: "Error",
+          description: error.message || "Failed to save resume",
+          variant: "destructive",
+        });
+      } finally {
+        setIsSaving(false);
+      }
+      return;
+    }
     
     setIsSaving(true);
     try {
@@ -95,16 +162,35 @@ export default function Editor() {
     } finally {
       setIsSaving(false);
     }
-  }, [isAuthenticated, resumeId, resumeTitle, store.resume]);
+  }, [isAuthenticated, resumeId, resumeTitle, store.resume, user?.id]);
 
   const handleReset = () => {
     if (confirm("Are you sure you want to reset your resume? This cannot be undone.")) {
       store.resetResume();
+      setSuggestions([]);
+      setAtsScore(0);
       toast({
         title: "Resume Reset",
         description: "Your resume has been cleared.",
       });
     }
+  };
+
+  const handleImportParsed = (resume: ResumeData, importedSuggestions: any[], score: number) => {
+    store.loadResume(resume);
+    setSuggestions(importedSuggestions);
+    setAtsScore(score);
+    setShowSuggestions(true);
+    setImportOpen(false);
+  };
+
+  const handleApplySuggestion = (suggestionId: string) => {
+    // Apply suggestion logic would go here
+    // For now, just mark as applied
+    toast({
+      title: "Suggestion applied",
+      description: "The suggestion has been applied to your resume.",
+    });
   };
 
   if (isLoading) {
@@ -151,6 +237,31 @@ export default function Editor() {
                 Saved {store.lastSaved.toLocaleTimeString()}
               </span>
             )}
+
+            <ThemeToggle />
+            
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setImportOpen(true)}
+              title="Import Resume"
+            >
+              <Upload className="w-4 h-4" />
+            </Button>
+
+            {suggestions.length > 0 && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowSuggestions(!showSuggestions)}
+                title="View Suggestions"
+              >
+                <Lightbulb className="w-4 h-4" />
+                {atsScore > 0 && (
+                  <span className="ml-1 text-xs">{atsScore}</span>
+                )}
+              </Button>
+            )}
             
             <Button
               variant="ghost"
@@ -169,13 +280,11 @@ export default function Editor() {
               <Settings2 className="w-4 h-4" />
             </Button>
 
-            <ResumeImport onImport={store.loadResume} />
-
             <Button variant="ghost" size="sm" onClick={handleReset}>
               <RotateCcw className="w-4 h-4" />
             </Button>
 
-            {resumeId && (
+            {isAuthenticated && (
               <Button 
                 variant="outline" 
                 size="sm" 
@@ -183,7 +292,7 @@ export default function Editor() {
                 disabled={isSaving}
               >
                 <Save className="w-4 h-4" />
-                <span className="hidden sm:inline ml-1">{isSaving ? 'Saving...' : 'Save'}</span>
+                <span className="hidden sm:inline ml-1">{isSaving ? 'Saving...' : resumeId ? 'Save' : 'Save to Dashboard'}</span>
               </Button>
             )}
 
@@ -217,12 +326,26 @@ export default function Editor() {
         </div>
 
         {/* Preview Panel */}
-        <div className={`bg-muted/50 overflow-y-auto ${showPreview ? "flex-1" : "hidden"}`}>
+        <div className={`bg-muted/50 overflow-y-auto ${showPreview ? "flex-1" : "hidden"} relative`}>
           <div className="p-4 md:p-8 flex justify-center">
             <div className="w-full max-w-[850px]">
               <ResumePreview resume={store.resume} />
             </div>
           </div>
+          
+          {/* Suggestions Panel - Overlay on right side */}
+          {showSuggestions && suggestions.length > 0 && (
+            <div className="absolute top-4 right-4 w-80 max-h-[calc(100vh-8rem)] z-10">
+              <SuggestionsPanel
+                suggestions={suggestions}
+                atsScore={atsScore}
+                onApply={handleApplySuggestion}
+                onIgnore={(id) => {
+                  setSuggestions(suggestions.filter(s => s.id !== id));
+                }}
+              />
+            </div>
+          )}
         </div>
       </div>
 
@@ -243,6 +366,16 @@ export default function Editor() {
         onOpenChange={setExportOpen}
         resume={store.resume}
       />
+
+      {/* Import Dialog */}
+      <Dialog open={importOpen} onOpenChange={setImportOpen}>
+        <DialogContent className="max-w-2xl">
+          <ImportResume
+            onParsed={handleImportParsed}
+            onClose={() => setImportOpen(false)}
+          />
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

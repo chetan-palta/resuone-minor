@@ -1,0 +1,22 @@
+[33mcommit 0eba73fd839fe87769dd3515efb6068c175a8e65[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m
+Author: Chetan Palta <chp2047@gmail.com>
+Date:   Wed Dec 3 04:56:46 2025 +0530
+
+    feat: Add resume import, parsing, suggestions, dark mode, and Google Sign-In
+    
+    - Add DOCX/PDF resume import with drag & drop
+    - Implement resume parsing and analysis engine
+    - Add ATS score and improvement suggestions
+    - Add dark mode theme toggle (all pages)
+    - Integrate Google Sign-In with Supabase OAuth
+    - Add 5-resume limit per user
+    - Remove Lovable branding references
+    - Fix social media meta tags with absolute URLs
+    - Add backend server for resume parsing
+    - Update README with project information
+
+[33mcommit 2d2060aac662021273a5f1bd72a32e463d27ca5d[m
+Author: Chetan Palta <chp2047@gmail.com>
+Date:   Wed Dec 3 04:53:36 2025 +0530
+
+    first commit

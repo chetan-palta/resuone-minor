@@ -3,6 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { FileText, Plus, Trash2, Edit, LogOut, Download, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
@@ -32,16 +33,70 @@ const Dashboard = () => {
   const [resumes, setResumes] = useState<SavedResume[]>([]);
   const [loading, setLoading] = useState(true);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [processingOAuth, setProcessingOAuth] = useState(false);
   
   const navigate = useNavigate();
   const { toast } = useToast();
   const { user, signOut, loading: authLoading, isAuthenticated } = useAuth();
 
+  // Handle OAuth callback - Supabase processes hash fragments automatically
   useEffect(() => {
-    if (!authLoading && !isAuthenticated) {
+    // Check if we have OAuth tokens in URL hash
+    const hashParams = new URLSearchParams(window.location.hash.substring(1));
+    if (hashParams.has('access_token')) {
+      console.log('🔄 Processing OAuth callback...');
+      setProcessingOAuth(true);
+      
+      // IMPORTANT: Don't clean URL yet - let Supabase process it first
+      // Supabase needs the hash to establish the session
+      
+      // Wait for Supabase to process the session via onAuthStateChange
+      // The hash will trigger SIGNED_IN event
+      const waitForSession = async () => {
+        let attempts = 0;
+        const maxAttempts = 20; // 6 seconds max wait
+        
+        const checkSession = async () => {
+          const { data: { session } } = await supabase.auth.getSession();
+          if (session) {
+            console.log('✅ OAuth session established:', session.user.email);
+            // Now clean up the URL
+            window.history.replaceState({}, document.title, '/dashboard');
+            setProcessingOAuth(false);
+            // Session is now set, component will re-render with isAuthenticated=true
+          } else if (attempts < maxAttempts) {
+            attempts++;
+            setTimeout(checkSession, 300);
+          } else {
+            console.warn('⚠️ OAuth session not established after waiting');
+            setProcessingOAuth(false);
+          }
+        };
+        
+        // Give Supabase time to process the hash
+        setTimeout(checkSession, 500);
+      };
+      
+      waitForSession();
+    }
+  }, []);
+
+  useEffect(() => {
+    // Check for OAuth tokens in hash (before state is set)
+    const hashParams = new URLSearchParams(window.location.hash.substring(1));
+    const hasOAuthToken = hashParams.has('access_token');
+    
+    // Only redirect if we're sure there's no session AND no OAuth callback in progress
+    // Don't redirect if:
+    // 1. Still loading auth state
+    // 2. Processing OAuth callback (session is being established) - check both state and hash
+    // 3. Already authenticated
+    // 4. Has OAuth token in URL (session is being processed)
+    if (!authLoading && !isAuthenticated && !processingOAuth && !hasOAuthToken) {
+      console.log('Redirecting to /auth - no session found');
       navigate("/auth");
     }
-  }, [isAuthenticated, authLoading, navigate]);
+  }, [isAuthenticated, authLoading, processingOAuth, navigate]);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -83,6 +138,16 @@ const Dashboard = () => {
 
   const createNewResume = async () => {
     try {
+      // Check 5-resume limit
+      if (resumes.length >= 5) {
+        toast({
+          title: "Resume limit reached",
+          description: "You can save up to 5 resumes. Please delete one to create a new one.",
+          variant: "destructive",
+        });
+        return;
+      }
+
       const { data, error } = await supabase
         .from('resumes')
         .insert({
@@ -147,10 +212,15 @@ const Dashboard = () => {
     });
   };
 
-  if (authLoading || loading) {
+  if (authLoading || loading || processingOAuth) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+          {processingOAuth && (
+            <p className="text-muted-foreground">Completing sign-in...</p>
+          )}
+        </div>
       </div>
     );
   }
@@ -168,6 +238,7 @@ const Dashboard = () => {
           </Link>
           
           <div className="flex items-center gap-4">
+            <ThemeToggle />
             <span className="text-sm text-muted-foreground hidden sm:block">
               {user?.email}
             </span>

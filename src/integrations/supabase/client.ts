@@ -5,8 +5,43 @@ import type { Database } from './types';
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
 const SUPABASE_PUBLISHABLE_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
 
+// Validate environment variables
+if (!SUPABASE_URL || !SUPABASE_PUBLISHABLE_KEY) {
+  console.error('❌ Supabase environment variables are missing!');
+  console.error('Please check your .env file has:');
+  console.error('VITE_SUPABASE_URL=https://ocmtxnxdglntvznuwuhw.supabase.co');
+  console.error('VITE_SUPABASE_PUBLISHABLE_KEY=your_anon_key');
+}
+
+if (SUPABASE_URL && !SUPABASE_URL.includes('ocmtxnxdglntvznuwuhw')) {
+  console.warn('⚠️ Supabase URL mismatch!');
+  console.warn('Expected: ocmtxnxdglntvznuwuhw');
+  console.warn('Got:', SUPABASE_URL);
+  console.warn('Please update your .env file with the correct URL');
+}
+
+// Check if key matches URL project
+if (SUPABASE_PUBLISHABLE_KEY && SUPABASE_URL) {
+  const keyProject = SUPABASE_PUBLISHABLE_KEY.includes('xoaesmifrvtjeunkmkax') ? 'xoaesmifrvtjeunkmkax' : null;
+  const urlProject = SUPABASE_URL.includes('ocmtxnxdglntvznuwuhw') ? 'ocmtxnxdglntvznuwuhw' : null;
+  
+  if (keyProject && urlProject && keyProject !== urlProject) {
+    console.error('❌ CRITICAL: Supabase KEY and URL mismatch!');
+    console.error('Your key is from project:', keyProject);
+    console.error('Your URL is from project:', urlProject);
+    console.error('They must match! Get the correct key from:');
+    console.error('https://app.supabase.com → Project → Settings → API');
+    console.error('Copy the "anon public" key for project:', urlProject);
+  }
+}
+
 // Import the supabase client like this:
 // import { supabase } from "@/integrations/supabase/client";
+
+// Validate before creating client
+if (!SUPABASE_URL || !SUPABASE_PUBLISHABLE_KEY) {
+  throw new Error('Supabase environment variables are missing! Check .env file.');
+}
 
 export const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
   auth: {
@@ -15,3 +50,17 @@ export const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABL
     autoRefreshToken: true,
   }
 });
+
+// Test connection on load
+if (typeof window !== 'undefined') {
+  supabase.auth.getSession().then(({ error }) => {
+    if (error && (error.message.includes('401') || error.message.includes('Invalid API key'))) {
+      console.error('❌ Supabase authentication failed!');
+      console.error('This usually means the API key is wrong or from a different project.');
+      console.error('Check your .env file - key must match project URL.');
+      console.error('Get correct key from: https://app.supabase.com → Project → Settings → API');
+    }
+  }).catch(() => {
+    // Ignore initial connection errors
+  });
+}
