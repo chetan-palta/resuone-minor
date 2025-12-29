@@ -1,8 +1,11 @@
 import mammoth from 'mammoth';
-import pdfParse from 'pdf-parse';
 import sanitizeHtml from 'sanitize-html';
 import fs from 'fs';
+import { createRequire } from 'module';
 import { parseTextToResumeJson } from '../utils/parser.js';
+
+const require = createRequire(import.meta.url);
+const pdfParse = require('pdf-parse');
 
 export async function parseResume(req, res) {
   try {
