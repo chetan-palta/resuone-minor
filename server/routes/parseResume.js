@@ -5,7 +5,9 @@ import { createRequire } from 'module';
 import { parseTextToResumeJson } from '../utils/parser.js';
 
 const require = createRequire(import.meta.url);
-const pdfParse = require('pdf-parse');
+// pdf-parse exports an object with PDFParse function
+const pdfParseModule = require('pdf-parse');
+const pdfParse = pdfParseModule.PDFParse || pdfParseModule.default || pdfParseModule;
 
 export async function parseResume(req, res) {
   try {
