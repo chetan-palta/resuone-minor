@@ -85,10 +85,28 @@ export function ATSTemplate({ resume }: TemplateProps) {
                 )}
                 {project.description && <p className="text-[10pt] mt-1">{project.description}</p>}
                 {(project.link || project.github) && (
-                  <div className="text-[10pt]">
-                    {project.link && <span>Link: {project.link}</span>}
-                    {project.link && project.github && " | "}
-                    {project.github && <span>GitHub: {project.github}</span>}
+                  <div className="text-[10pt] mt-1">
+                    {project.link && (
+                      <a 
+                        href={project.link.startsWith('http') ? project.link : `https://${project.link}`}
+                        className="text-blue-600 hover:underline"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        Demo
+                      </a>
+                    )}
+                    {project.link && project.github && <span className="mx-1">|</span>}
+                    {project.github && (
+                      <a 
+                        href={project.github.startsWith('http') ? project.github : `https://${project.github}`}
+                        className="text-blue-600 hover:underline"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        GitHub
+                      </a>
+                    )}
                   </div>
                 )}
               </div>
@@ -133,10 +151,45 @@ export function ATSTemplate({ resume }: TemplateProps) {
         {(personal.linkedin || personal.github || personal.website) && (
           <div className="text-[10pt]">
             {[
-              personal.linkedin && `LinkedIn: ${personal.linkedin}`,
-              personal.github && `GitHub: ${personal.github}`,
-              personal.website && `Website: ${personal.website}`,
-            ].filter(Boolean).join(" | ")}
+              personal.linkedin && (
+                <a 
+                  key="linkedin"
+                  href={personal.linkedin.startsWith('http') ? personal.linkedin : `https://${personal.linkedin}`}
+                  className="text-blue-600 hover:underline"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  LinkedIn
+                </a>
+              ),
+              personal.github && (
+                <a 
+                  key="github"
+                  href={personal.github.startsWith('http') ? personal.github : `https://${personal.github}`}
+                  className="text-blue-600 hover:underline"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  GitHub
+                </a>
+              ),
+              personal.website && (
+                <a 
+                  key="website"
+                  href={personal.website.startsWith('http') ? personal.website : `https://${personal.website}`}
+                  className="text-blue-600 hover:underline"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Website
+                </a>
+              ),
+            ].filter(Boolean).map((link, index, array) => (
+              <span key={index}>
+                {link}
+                {index < array.length - 1 && ' | '}
+              </span>
+            ))}
           </div>
         )}
       </header>
