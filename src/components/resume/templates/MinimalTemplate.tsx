@@ -138,41 +138,41 @@ export function MinimalTemplate({ resume }: TemplateProps) {
       {/* Header */}
       <header className="mb-4 text-center">
         <h1 className="text-2xl font-bold" style={{ color: accentColor }}>{personal.fullName || "Your Name"}</h1>
-        <div className="flex flex-wrap justify-center gap-3 mt-2 text-[9pt] text-gray-600">
+        <div className="flex flex-wrap justify-center gap-3 mt-2 text-[9pt] text-gray-600" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           {personal.email && (
-            <span className="flex items-center gap-1">
-              <Mail className="w-3 h-3" />
-              <a href={`mailto:${personal.email}`}>{personal.email}</a>
+            <span className="flex items-center gap-1" style={{ display: 'inline-flex', alignItems: 'center', verticalAlign: 'middle' }}>
+              <Mail className="w-3 h-3 flex-shrink-0" style={{ display: 'inline-block', verticalAlign: 'middle' }} />
+              <a href={`mailto:${personal.email}`} style={{ display: 'inline-block', verticalAlign: 'middle' }}>{personal.email}</a>
             </span>
           )}
           {personal.phone && (
-            <span className="flex items-center gap-1">
-              <Phone className="w-3 h-3" />
-              {personal.phone}
+            <span className="flex items-center gap-1" style={{ display: 'inline-flex', alignItems: 'center', verticalAlign: 'middle' }}>
+              <Phone className="w-3 h-3 flex-shrink-0" style={{ display: 'inline-block', verticalAlign: 'middle' }} />
+              <span style={{ display: 'inline-block', verticalAlign: 'middle' }}>{personal.phone}</span>
             </span>
           )}
           {personal.location && (
-            <span className="flex items-center gap-1">
-              <MapPin className="w-3 h-3" />
-              {personal.location}
+            <span className="flex items-center gap-1" style={{ display: 'inline-flex', alignItems: 'center', verticalAlign: 'middle' }}>
+              <MapPin className="w-3 h-3 flex-shrink-0" style={{ display: 'inline-block', verticalAlign: 'middle' }} />
+              <span style={{ display: 'inline-block', verticalAlign: 'middle' }}>{personal.location}</span>
             </span>
           )}
           {personal.linkedin && (
-            <a href={personal.linkedin.startsWith('http') ? personal.linkedin : `https://${personal.linkedin}`} className="flex items-center gap-1 hover:underline" style={{ color: accentColor }}>
-              <Linkedin className="w-3 h-3" />
-              LinkedIn
+            <a href={personal.linkedin.startsWith('http') ? personal.linkedin : `https://${personal.linkedin}`} className="flex items-center gap-1 hover:underline" style={{ color: accentColor, display: 'inline-flex', alignItems: 'center', verticalAlign: 'middle' }}>
+              <Linkedin className="w-3 h-3 flex-shrink-0" style={{ display: 'inline-block', verticalAlign: 'middle' }} />
+              <span style={{ display: 'inline-block', verticalAlign: 'middle' }}>LinkedIn</span>
             </a>
           )}
           {personal.github && (
-            <a href={personal.github.startsWith('http') ? personal.github : `https://${personal.github}`} className="flex items-center gap-1 hover:underline" style={{ color: accentColor }}>
-              <Github className="w-3 h-3" />
-              GitHub
+            <a href={personal.github.startsWith('http') ? personal.github : `https://${personal.github}`} className="flex items-center gap-1 hover:underline" style={{ color: accentColor, display: 'inline-flex', alignItems: 'center', verticalAlign: 'middle' }}>
+              <Github className="w-3 h-3 flex-shrink-0" style={{ display: 'inline-block', verticalAlign: 'middle' }} />
+              <span style={{ display: 'inline-block', verticalAlign: 'middle' }}>GitHub</span>
             </a>
           )}
           {personal.website && (
-            <a href={personal.website.startsWith('http') ? personal.website : `https://${personal.website}`} className="flex items-center gap-1 hover:underline" style={{ color: accentColor }}>
-              <Globe className="w-3 h-3" />
-              Website
+            <a href={personal.website.startsWith('http') ? personal.website : `https://${personal.website}`} className="flex items-center gap-1 hover:underline" style={{ color: accentColor, display: 'inline-flex', alignItems: 'center', verticalAlign: 'middle' }}>
+              <Globe className="w-3 h-3 flex-shrink-0" style={{ display: 'inline-block', verticalAlign: 'middle' }} />
+              <span style={{ display: 'inline-block', verticalAlign: 'middle' }}>Website</span>
             </a>
           )}
         </div>

@@ -18,7 +18,7 @@ export function ProfessionalTemplate({ resume }: TemplateProps) {
       case "experience":
         return experience.length > 0 && (
           <section key="experience" className="mb-4">
-            <h2 className="text-[12pt] font-bold uppercase tracking-wide mb-2 pb-1 border-b-2" style={{ color: accentColor, borderColor: accentColor }}>
+            <h2 className="text-[12pt] font-bold uppercase tracking-wide mb-2 pb-1 border-b-2" style={{ color: accentColor, borderColor: accentColor, display: 'block', width: '100%', borderBottomWidth: '2px', borderBottomStyle: 'solid' }}>
               Professional Experience
             </h2>
             {experience.map((exp) => (
@@ -49,7 +49,7 @@ export function ProfessionalTemplate({ resume }: TemplateProps) {
       case "education":
         return education.length > 0 && (
           <section key="education" className="mb-4">
-            <h2 className="text-[12pt] font-bold uppercase tracking-wide mb-2 pb-1 border-b-2" style={{ color: accentColor, borderColor: accentColor }}>
+            <h2 className="text-[12pt] font-bold uppercase tracking-wide mb-2 pb-1 border-b-2" style={{ color: accentColor, borderColor: accentColor, display: 'block', width: '100%', borderBottomWidth: '2px', borderBottomStyle: 'solid' }}>
               Education
             </h2>
             {education.map((edu) => (
@@ -73,7 +73,7 @@ export function ProfessionalTemplate({ resume }: TemplateProps) {
       case "skills":
         return skills.length > 0 && (
           <section key="skills" className="mb-4">
-            <h2 className="text-[12pt] font-bold uppercase tracking-wide mb-2 pb-1 border-b-2" style={{ color: accentColor, borderColor: accentColor }}>
+            <h2 className="text-[12pt] font-bold uppercase tracking-wide mb-2 pb-1 border-b-2" style={{ color: accentColor, borderColor: accentColor, display: 'block', width: '100%', borderBottomWidth: '2px', borderBottomStyle: 'solid' }}>
               Skills & Expertise
             </h2>
             <div className="grid grid-cols-2 gap-2">
@@ -90,7 +90,7 @@ export function ProfessionalTemplate({ resume }: TemplateProps) {
       case "projects":
         return projects.length > 0 && (
           <section key="projects" className="mb-4">
-            <h2 className="text-[12pt] font-bold uppercase tracking-wide mb-2 pb-1 border-b-2" style={{ color: accentColor, borderColor: accentColor }}>
+            <h2 className="text-[12pt] font-bold uppercase tracking-wide mb-2 pb-1 border-b-2" style={{ color: accentColor, borderColor: accentColor, display: 'block', width: '100%', borderBottomWidth: '2px', borderBottomStyle: 'solid' }}>
               Projects
             </h2>
             {projects.map((project) => (
@@ -117,7 +117,7 @@ export function ProfessionalTemplate({ resume }: TemplateProps) {
       case "certifications":
         return certifications.length > 0 && (
           <section key="certifications" className="mb-4">
-            <h2 className="text-[12pt] font-bold uppercase tracking-wide mb-2 pb-1 border-b-2" style={{ color: accentColor, borderColor: accentColor }}>
+            <h2 className="text-[12pt] font-bold uppercase tracking-wide mb-2 pb-1 border-b-2" style={{ color: accentColor, borderColor: accentColor, display: 'block', width: '100%', borderBottomWidth: '2px', borderBottomStyle: 'solid' }}>
               Certifications
             </h2>
             {certifications.map((cert) => (
@@ -146,41 +146,41 @@ export function ProfessionalTemplate({ resume }: TemplateProps) {
       {/* Header */}
       <header className="mb-4 pb-3 border-b-4" style={{ borderColor: accentColor }}>
         <h1 className="text-3xl font-bold text-gray-900">{personal.fullName || "Your Name"}</h1>
-        <div className="flex flex-wrap gap-4 mt-2 text-[9pt] text-gray-600">
+        <div className="flex flex-wrap gap-4 mt-2 text-[9pt] text-gray-600" style={{ display: 'flex', alignItems: 'center' }}>
           {personal.email && (
-            <span className="flex items-center gap-1">
-              <Mail className="w-3 h-3" style={{ color: accentColor }} />
-              <a href={`mailto:${personal.email}`}>{personal.email}</a>
+            <span className="flex items-center gap-1" style={{ display: 'inline-flex', alignItems: 'center', verticalAlign: 'middle' }}>
+              <Mail className="w-3 h-3 flex-shrink-0" style={{ color: accentColor, display: 'inline-block', verticalAlign: 'middle' }} />
+              <a href={`mailto:${personal.email}`} style={{ display: 'inline-block', verticalAlign: 'middle' }}>{personal.email}</a>
             </span>
           )}
           {personal.phone && (
-            <span className="flex items-center gap-1">
-              <Phone className="w-3 h-3" style={{ color: accentColor }} />
-              {personal.phone}
+            <span className="flex items-center gap-1" style={{ display: 'inline-flex', alignItems: 'center', verticalAlign: 'middle' }}>
+              <Phone className="w-3 h-3 flex-shrink-0" style={{ color: accentColor, display: 'inline-block', verticalAlign: 'middle' }} />
+              <span style={{ display: 'inline-block', verticalAlign: 'middle' }}>{personal.phone}</span>
             </span>
           )}
           {personal.location && (
-            <span className="flex items-center gap-1">
-              <MapPin className="w-3 h-3" style={{ color: accentColor }} />
-              {personal.location}
+            <span className="flex items-center gap-1" style={{ display: 'inline-flex', alignItems: 'center', verticalAlign: 'middle' }}>
+              <MapPin className="w-3 h-3 flex-shrink-0" style={{ color: accentColor, display: 'inline-block', verticalAlign: 'middle' }} />
+              <span style={{ display: 'inline-block', verticalAlign: 'middle' }}>{personal.location}</span>
             </span>
           )}
           {personal.linkedin && (
-            <a href={personal.linkedin.startsWith('http') ? personal.linkedin : `https://${personal.linkedin}`} className="flex items-center gap-1 hover:underline">
-              <Linkedin className="w-3 h-3" style={{ color: accentColor }} />
-              LinkedIn
+            <a href={personal.linkedin.startsWith('http') ? personal.linkedin : `https://${personal.linkedin}`} className="flex items-center gap-1 hover:underline" style={{ display: 'inline-flex', alignItems: 'center', verticalAlign: 'middle' }}>
+              <Linkedin className="w-3 h-3 flex-shrink-0" style={{ color: accentColor, display: 'inline-block', verticalAlign: 'middle' }} />
+              <span style={{ display: 'inline-block', verticalAlign: 'middle' }}>LinkedIn</span>
             </a>
           )}
           {personal.github && (
-            <a href={personal.github.startsWith('http') ? personal.github : `https://${personal.github}`} className="flex items-center gap-1 hover:underline">
-              <Github className="w-3 h-3" style={{ color: accentColor }} />
-              GitHub
+            <a href={personal.github.startsWith('http') ? personal.github : `https://${personal.github}`} className="flex items-center gap-1 hover:underline" style={{ display: 'inline-flex', alignItems: 'center', verticalAlign: 'middle' }}>
+              <Github className="w-3 h-3 flex-shrink-0" style={{ color: accentColor, display: 'inline-block', verticalAlign: 'middle' }} />
+              <span style={{ display: 'inline-block', verticalAlign: 'middle' }}>GitHub</span>
             </a>
           )}
           {personal.website && (
-            <a href={personal.website.startsWith('http') ? personal.website : `https://${personal.website}`} className="flex items-center gap-1 hover:underline">
-              <Globe className="w-3 h-3" style={{ color: accentColor }} />
-              Portfolio
+            <a href={personal.website.startsWith('http') ? personal.website : `https://${personal.website}`} className="flex items-center gap-1 hover:underline" style={{ display: 'inline-flex', alignItems: 'center', verticalAlign: 'middle' }}>
+              <Globe className="w-3 h-3 flex-shrink-0" style={{ color: accentColor, display: 'inline-block', verticalAlign: 'middle' }} />
+              <span style={{ display: 'inline-block', verticalAlign: 'middle' }}>Portfolio</span>
             </a>
           )}
         </div>
@@ -189,7 +189,7 @@ export function ProfessionalTemplate({ resume }: TemplateProps) {
       {/* Summary */}
       {personal.summary && (
         <section className="mb-4">
-          <h2 className="text-[12pt] font-bold uppercase tracking-wide mb-2 pb-1 border-b-2" style={{ color: accentColor, borderColor: accentColor }}>
+          <h2 className="text-[12pt] font-bold uppercase tracking-wide mb-2 pb-1 border-b-2" style={{ color: accentColor, borderColor: accentColor, display: 'block', width: '100%', borderBottomWidth: '2px', borderBottomStyle: 'solid' }}>
             Professional Summary
           </h2>
           <p className="text-[10pt] text-gray-700">{personal.summary}</p>

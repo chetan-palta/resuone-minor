@@ -16,7 +16,7 @@ export function ATSTemplate({ resume }: TemplateProps) {
       case "experience":
         return experience.length > 0 && (
           <section key="experience" className="mb-4">
-            <h2 className="text-[12pt] font-bold uppercase mb-2 border-b border-gray-400 pb-1">
+            <h2 className="text-[12pt] font-bold uppercase mb-2 border-b border-gray-400 pb-1" style={{ display: 'block', width: '100%', borderBottomWidth: '1px', borderBottomStyle: 'solid' }}>
               Work Experience
             </h2>
             {experience.map((exp) => (
@@ -40,7 +40,7 @@ export function ATSTemplate({ resume }: TemplateProps) {
       case "education":
         return education.length > 0 && (
           <section key="education" className="mb-4">
-            <h2 className="text-[12pt] font-bold uppercase mb-2 border-b border-gray-400 pb-1">
+            <h2 className="text-[12pt] font-bold uppercase mb-2 border-b border-gray-400 pb-1" style={{ display: 'block', width: '100%', borderBottomWidth: '1px', borderBottomStyle: 'solid' }}>
               Education
             </h2>
             {education.map((edu) => (

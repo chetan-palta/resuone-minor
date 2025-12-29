@@ -161,38 +161,38 @@ export function ModernTemplate({ resume }: TemplateProps) {
       {/* Header */}
       <header className="mb-5">
         <h1 className="text-3xl font-light" style={{ color: accentColor }}>{personal.fullName || "Your Name"}</h1>
-        <div className="flex flex-wrap gap-3 mt-2 text-[9pt] text-gray-500">
+        <div className="flex flex-wrap gap-3 mt-2 text-[9pt] text-gray-500" style={{ display: 'flex', alignItems: 'center' }}>
           {personal.email && (
-            <a href={`mailto:${personal.email}`} className="flex items-center gap-1 hover:text-gray-700">
-              <Mail className="w-3 h-3" />
-              {personal.email}
+            <a href={`mailto:${personal.email}`} className="flex items-center gap-1 hover:text-gray-700" style={{ display: 'inline-flex', alignItems: 'center', verticalAlign: 'middle' }}>
+              <Mail className="w-3 h-3 flex-shrink-0" style={{ display: 'inline-block', verticalAlign: 'middle' }} />
+              <span style={{ display: 'inline-block', verticalAlign: 'middle' }}>{personal.email}</span>
             </a>
           )}
           {personal.phone && (
-            <span className="flex items-center gap-1">
-              <Phone className="w-3 h-3" />
-              {personal.phone}
+            <span className="flex items-center gap-1" style={{ display: 'inline-flex', alignItems: 'center', verticalAlign: 'middle' }}>
+              <Phone className="w-3 h-3 flex-shrink-0" style={{ display: 'inline-block', verticalAlign: 'middle' }} />
+              <span style={{ display: 'inline-block', verticalAlign: 'middle' }}>{personal.phone}</span>
             </span>
           )}
           {personal.location && (
-            <span className="flex items-center gap-1">
-              <MapPin className="w-3 h-3" />
-              {personal.location}
+            <span className="flex items-center gap-1" style={{ display: 'inline-flex', alignItems: 'center', verticalAlign: 'middle' }}>
+              <MapPin className="w-3 h-3 flex-shrink-0" style={{ display: 'inline-block', verticalAlign: 'middle' }} />
+              <span style={{ display: 'inline-block', verticalAlign: 'middle' }}>{personal.location}</span>
             </span>
           )}
           {personal.linkedin && (
-            <a href={personal.linkedin.startsWith('http') ? personal.linkedin : `https://${personal.linkedin}`} className="flex items-center gap-1 hover:text-gray-700">
-              <Linkedin className="w-3 h-3" />
+            <a href={personal.linkedin.startsWith('http') ? personal.linkedin : `https://${personal.linkedin}`} className="flex items-center gap-1 hover:text-gray-700" style={{ display: 'inline-flex', alignItems: 'center', verticalAlign: 'middle' }}>
+              <Linkedin className="w-3 h-3 flex-shrink-0" style={{ display: 'inline-block', verticalAlign: 'middle' }} />
             </a>
           )}
           {personal.github && (
-            <a href={personal.github.startsWith('http') ? personal.github : `https://${personal.github}`} className="flex items-center gap-1 hover:text-gray-700">
-              <Github className="w-3 h-3" />
+            <a href={personal.github.startsWith('http') ? personal.github : `https://${personal.github}`} className="flex items-center gap-1 hover:text-gray-700" style={{ display: 'inline-flex', alignItems: 'center', verticalAlign: 'middle' }}>
+              <Github className="w-3 h-3 flex-shrink-0" style={{ display: 'inline-block', verticalAlign: 'middle' }} />
             </a>
           )}
           {personal.website && (
-            <a href={personal.website.startsWith('http') ? personal.website : `https://${personal.website}`} className="flex items-center gap-1 hover:text-gray-700">
-              <Globe className="w-3 h-3" />
+            <a href={personal.website.startsWith('http') ? personal.website : `https://${personal.website}`} className="flex items-center gap-1 hover:text-gray-700" style={{ display: 'inline-flex', alignItems: 'center', verticalAlign: 'middle' }}>
+              <Globe className="w-3 h-3 flex-shrink-0" style={{ display: 'inline-block', verticalAlign: 'middle' }} />
             </a>
           )}
         </div>

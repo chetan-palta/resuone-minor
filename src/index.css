@@ -185,6 +185,55 @@
   }
 }
 
+/* Export-specific styles for better alignment */
+#resume-preview {
+  /* Ensure icons align properly */
+  .flex.items-center {
+    display: inline-flex !important;
+    align-items: center !important;
+    vertical-align: middle !important;
+  }
+  
+  /* Fix icon alignment in contact sections */
+  svg {
+    display: inline-block !important;
+    vertical-align: middle !important;
+    flex-shrink: 0 !important;
+  }
+  
+  /* Ensure section headers align properly */
+  h2 {
+    display: block !important;
+    width: 100% !important;
+  }
+  
+  /* Fix border alignment in section headers */
+  .border-b-2,
+  .border-b-4 {
+    border-bottom-width: 2px !important;
+    border-bottom-style: solid !important;
+    display: block !important;
+    width: 100% !important;
+  }
+  
+  /* Ensure flex containers work in PDF */
+  .flex {
+    display: flex !important;
+  }
+  
+  .flex-wrap {
+    flex-wrap: wrap !important;
+  }
+  
+  .items-center {
+    align-items: center !important;
+  }
+  
+  .justify-between {
+    justify-content: space-between !important;
+  }
+}
+
 /* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
