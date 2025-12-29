@@ -1,7 +1,18 @@
 import { v4 as uuidv4 } from 'uuid';
 
 export function parseTextToResumeJson(text) {
-  const lines = text.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+  // Clean up text: remove page markers and extra whitespace
+  text = text.replace(/--\s*\d+\s+of\s+\d+\s*--/gi, '');
+  text = text.replace(/page\s+\d+\s+of\s+\d+/gi, '');
+  text = text.replace(/\n{3,}/g, '\n\n'); // Normalize multiple newlines
+  
+  const lines = text.split(/\r?\n/).map(l => l.trim()).filter(line => {
+    // Filter out empty lines and page markers
+    if (!line) return false;
+    if (/^--\s*\d+\s+of\s+\d+\s*--$/i.test(line)) return false;
+    if (/^page\s+\d+\s+of\s+\d+$/i.test(line)) return false;
+    return true;
+  });
   
   const resume = {
     personal: {
@@ -211,10 +222,11 @@ export function parseTextToResumeJson(text) {
       continue;
     }
 
-    // Skip if it's contact info we already extracted
-    const isEmail = /[\w\.-]+@[\w\.-]+\.\w+/.test(line);
-    const isPhone = /(\+?\d{1,3}[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}/.test(line);
-    if (isEmail || isPhone || lower.includes('linkedin') || lower.includes('github')) {
+    // Skip if it's contact info we already extracted (but only if it's a standalone line)
+    const isEmail = /^[\w\.-]+@[\w\.-]+\.\w+$/.test(line);
+    const isPhone = /^(\+?\d{1,3}[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}$/.test(line);
+    const isOnlyLink = /^(linkedin|github|website):\s*https?:\/\//i.test(lower);
+    if ((isEmail || isPhone || isOnlyLink) && line.length < 100) {
       continue;
     }
 

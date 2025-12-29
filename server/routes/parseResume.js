@@ -32,9 +32,16 @@ export async function parseResume(req, res) {
         const data = fs.readFileSync(file.path);
         // pdf-parse v2 uses class-based API: new PDFParse({ data }) then getText()
         const parser = new PDFParse({ data });
-        // getText with parseHyperlinks enabled to include URLs in text as markdown links
-        const result = await parser.getText({ parseHyperlinks: true });
+        // getText with parseHyperlinks enabled and pageJoiner disabled to avoid page markers
+        const result = await parser.getText({ 
+          parseHyperlinks: true,
+          pageJoiner: '' // Disable page markers like "-- 1 of 1 --"
+        });
         text = result.text;
+        
+        // Remove any remaining page markers that might have been added
+        text = text.replace(/--\s*\d+\s+of\s+\d+\s*--/gi, '');
+        text = text.replace(/page\s+\d+\s+of\s+\d+/gi, '');
         
         // Also try to get page links if available
         try {
