@@ -1,5 +1,5 @@
 import mammoth from 'mammoth';
-import * as pdfParse from 'pdf-parse';
+import pdfParse from 'pdf-parse';
 import sanitizeHtml from 'sanitize-html';
 import fs from 'fs';
 import { parseTextToResumeJson } from '../utils/parser.js';
@@ -25,7 +25,7 @@ export async function parseResume(req, res) {
         text = html.replace(/<[^>]+>/g, '\n').replace(/\n{2,}/g, '\n').trim();
       } else if (mime === 'application/pdf' || file.originalname.endsWith('.pdf')) {
         const data = fs.readFileSync(file.path);
-        const pdfData = await pdfParse.default(data);
+        const pdfData = await pdfParse(data);
         text = pdfData.text;
       } else {
         // Cleanup and return error
