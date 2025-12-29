@@ -190,8 +190,8 @@ export function TwoColumnTemplate({ resume }: TemplateProps) {
             )}
             {personal.website && (
               <div className="flex items-center gap-2" style={{ display: 'flex', alignItems: 'center' }}>
-                <Globe className="w-3 h-3" />
-                <a href={personal.website.startsWith('http') ? personal.website : `https://${personal.website}`} className="truncate">Website</a>
+                <Globe className="w-3 h-3 flex-shrink-0" style={{ display: 'inline-block', verticalAlign: 'middle' }} />
+                <a href={personal.website.startsWith('http') ? personal.website : `https://${personal.website}`} className="truncate" style={{ display: 'inline-block', verticalAlign: 'middle' }}>Website</a>
               </div>
             )}
           </div>
