@@ -3,7 +3,7 @@ import { Link, useSearchParams, useNavigate } from "react-router-dom";
 import { FileText, Download, RotateCcw, Eye, EyeOff, Settings2, Save, ArrowLeft, Upload, Lightbulb } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { useResumeStore } from "@/hooks/useResumeStore";
 import { useAuth } from "@/hooks/useAuth";
 import { ResumeForm } from "@/components/resume/ResumeForm";
@@ -370,6 +370,10 @@ export default function Editor() {
       {/* Import Dialog */}
       <Dialog open={importOpen} onOpenChange={setImportOpen}>
         <DialogContent className="max-w-2xl">
+          <DialogTitle className="sr-only">Import Resume</DialogTitle>
+          <DialogDescription className="sr-only">
+            Upload a DOCX or PDF file to import your resume
+          </DialogDescription>
           <ImportResume
             onParsed={handleImportParsed}
             onClose={() => setImportOpen(false)}
