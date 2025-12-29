@@ -282,14 +282,38 @@ export function parseTextToResumeJson(text) {
 
         resume.experience.push(currentEntry);
       } else if (currentEntry) {
-        // Bullet point or description
+        // Bullet point or description - capture all content
         const cleanLine = line.replace(/^[•\-\*]\s*/, '').trim();
         if (cleanLine.length > 0) {
+          // Don't skip lines that might be content
           if (currentEntry.achievements.length === 0 && cleanLine.length > 50) {
             currentEntry.description = cleanLine;
           } else {
+            // Add as achievement, but also append to description if it's long
             currentEntry.achievements.push(cleanLine);
+            if (currentEntry.description && cleanLine.length > 20) {
+              currentEntry.description += ' ' + cleanLine;
+            }
           }
+        }
+      } else if (!currentSection) {
+        // If no section detected yet, try to capture content that might be experience
+        // This helps with resumes that don't have clear section headers
+        const datePattern = /(\d{4}|\w+\s+\d{4})/;
+        if (datePattern.test(line) && line.length < 150) {
+          // Might be an experience entry
+          currentEntry = {
+            id: uuidv4(),
+            company: '',
+            position: line,
+            location: '',
+            startDate: '',
+            endDate: '',
+            current: false,
+            description: '',
+            achievements: []
+          };
+          resume.experience.push(currentEntry);
         }
       }
     } else if (currentSection === 'education') {
@@ -324,34 +348,65 @@ export function parseTextToResumeJson(text) {
         resume.education.push(edu);
       }
     } else if (currentSection === 'skills') {
-      // Split by comma, semicolon, or newline
-      const skills = line.split(/[,;•\-\*]/).map(s => s.trim()).filter(Boolean);
-      if (skills.length > 0) {
-        // Group into categories if we have a category structure
-        if (resume.skills.length === 0 || resume.skills[resume.skills.length - 1].skills.length > 10) {
-          resume.skills.push({
-            id: uuidv4(),
-            category: 'Technical Skills',
-            skills: []
-          });
+      // Skills are usually comma-separated or bulleted
+      if (line.length > 0 && !line.match(/^(skills?|technical skills)/i)) {
+        // Don't skip lines that might contain skills
+        const skills = line.split(/[,;•\-\*|]/).map(s => s.trim()).filter(Boolean);
+        if (skills.length > 0) {
+          // Check if we already have a category for this
+          let category = resume.skills.find(s => s.category === 'Skills');
+          if (!category) {
+            category = {
+              id: uuidv4(),
+              category: 'Skills',
+              skills: []
+            };
+            resume.skills.push(category);
+          }
+          // Add skills, filtering out very short or very long items
+          const validSkills = skills.filter(s => s.length > 1 && s.length < 50 && !/^[0-9\-\s]+$/.test(s));
+          if (validSkills.length > 0) {
+            category.skills.push(...validSkills);
+          }
         }
-        resume.skills[resume.skills.length - 1].skills.push(...skills);
       }
     } else if (currentSection === 'projects') {
-      if (line.length < 100 && !line.startsWith('•') && !line.startsWith('-')) {
-        resume.projects.push({
-          id: uuidv4(),
-          name: line,
-          description: '',
-          technologies: [],
-          link: '',
-          github: ''
-        });
+      // Project name detection - usually shorter lines without bullets
+      if (line.length > 0 && line.length < 100 && !line.startsWith('•') && !line.startsWith('-') && !line.match(/^technolog/i)) {
+        // Check if this looks like a project name (not a description)
+        if (!line.match(/^[a-z]/) || line.length < 50) {
+          resume.projects.push({
+            id: uuidv4(),
+            name: line,
+            description: '',
+            technologies: [],
+            link: '',
+            github: ''
+          });
+        } else if (resume.projects.length > 0) {
+          // Might be description for last project
+          const lastProject = resume.projects[resume.projects.length - 1];
+          if (!lastProject.description) {
+            lastProject.description = line;
+          }
+        }
       } else if (resume.projects.length > 0) {
+        // Bullet point or description
         const cleanLine = line.replace(/^[•\-\*]\s*/, '').trim();
         const lastProject = resume.projects[resume.projects.length - 1];
-        if (!lastProject.description) {
-          lastProject.description = cleanLine;
+        if (cleanLine.length > 0) {
+          if (cleanLine.toLowerCase().includes('technolog')) {
+            // Extract technologies
+            const techMatch = cleanLine.match(/technolog(?:ies|y):?\s*(.+)/i);
+            if (techMatch) {
+              lastProject.technologies = techMatch[1].split(/[,;]/).map(t => t.trim()).filter(Boolean);
+            }
+          } else if (!lastProject.description) {
+            lastProject.description = cleanLine;
+          } else {
+            // Append to description
+            lastProject.description += ' ' + cleanLine;
+          }
         }
       }
     } else if (currentSection === 'certifications') {
