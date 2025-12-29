@@ -38,6 +38,22 @@ export function parseTextToResumeJson(text) {
   let summaryLines = [];
   let inSummary = true;
 
+  // Extract all URLs from entire text first (before line-by-line parsing)
+  const urlRegex = /(https?:\/\/[^\s]+|www\.[^\s]+|[a-zA-Z0-9][a-zA-Z0-9-]*\.(com|org|net|io|dev|co|me|edu|gov)[^\s]*)/gi;
+  const allUrls = [];
+  const fullText = text.toLowerCase();
+  
+  // Find all URLs in the text
+  let urlMatch;
+  while ((urlMatch = urlRegex.exec(text)) !== null) {
+    let url = urlMatch[0].trim();
+    // Clean up URL (remove trailing punctuation)
+    url = url.replace(/[.,;:!?]+$/, '');
+    if (url && !allUrls.includes(url)) {
+      allUrls.push(url);
+    }
+  }
+
   // Extract contact info first
   let hasEmail = false;
   let hasPhone = false;
@@ -62,28 +78,59 @@ export function parseTextToResumeJson(text) {
       continue;
     }
 
-    // LinkedIn
+    // LinkedIn - check line and all URLs
     if (lower.includes('linkedin.com') || lower.includes('linkedin')) {
-      const linkedinMatch = line.match(/linkedin\.com\/in\/[\w-]+/i);
+      const linkedinMatch = line.match(/(?:https?:\/\/)?(?:www\.)?linkedin\.com\/in\/([\w-]+)/i) || 
+                           line.match(/(?:https?:\/\/)?(?:www\.)?linkedin\.com\/profile\/view\?id=([\w-]+)/i);
       if (linkedinMatch) {
-        resume.personal.linkedin = 'https://' + linkedinMatch[0];
+        resume.personal.linkedin = linkedinMatch[0].startsWith('http') ? linkedinMatch[0] : 'https://' + linkedinMatch[0];
+      } else {
+        // Check all URLs for LinkedIn
+        const linkedinUrl = allUrls.find(url => url.toLowerCase().includes('linkedin.com/in/') || url.toLowerCase().includes('linkedin.com/profile'));
+        if (linkedinUrl) {
+          resume.personal.linkedin = linkedinUrl.startsWith('http') ? linkedinUrl : 'https://' + linkedinUrl;
+        }
       }
       continue;
     }
 
-    // GitHub
+    // GitHub - check line and all URLs
     if (lower.includes('github.com') || lower.includes('github')) {
-      const githubMatch = line.match(/github\.com\/[\w-]+/i);
+      const githubMatch = line.match(/(?:https?:\/\/)?(?:www\.)?github\.com\/([\w-]+(?:\/[\w-]+)?)/i);
       if (githubMatch) {
-        resume.personal.github = 'https://' + githubMatch[0];
+        resume.personal.github = githubMatch[0].startsWith('http') ? githubMatch[0] : 'https://' + githubMatch[0];
+      } else {
+        // Check all URLs for GitHub
+        const githubUrl = allUrls.find(url => url.toLowerCase().includes('github.com/'));
+        if (githubUrl) {
+          resume.personal.github = githubUrl.startsWith('http') ? githubUrl : 'https://' + githubUrl;
+        }
       }
       continue;
     }
 
-    // Website
+    // LeetCode
+    if (lower.includes('leetcode.com') || lower.includes('leetcode')) {
+      const leetcodeMatch = line.match(/(?:https?:\/\/)?(?:www\.)?leetcode\.com\/([\w-]+)/i);
+      if (leetcodeMatch) {
+        resume.personal.website = leetcodeMatch[0].startsWith('http') ? leetcodeMatch[0] : 'https://' + leetcodeMatch[0];
+      } else {
+        const leetcodeUrl = allUrls.find(url => url.toLowerCase().includes('leetcode.com/'));
+        if (leetcodeUrl && !resume.personal.website) {
+          resume.personal.website = leetcodeUrl.startsWith('http') ? leetcodeUrl : 'https://' + leetcodeUrl;
+        }
+      }
+      continue;
+    }
+
+    // Website - check for any URL in the line or all URLs
     if ((lower.startsWith('http://') || lower.startsWith('https://') || lower.startsWith('www.')) 
-        && !lower.includes('linkedin') && !lower.includes('github')) {
-      resume.personal.website = line;
+        && !lower.includes('linkedin') && !lower.includes('github') && !lower.includes('leetcode')) {
+      let url = line.trim();
+      url = url.replace(/[.,;:!?]+$/, ''); // Remove trailing punctuation
+      if (!resume.personal.website) {
+        resume.personal.website = url.startsWith('http') ? url : (url.startsWith('www.') ? 'https://' + url : url);
+      }
       continue;
     }
 
@@ -93,6 +140,21 @@ export function parseTextToResumeJson(text) {
       if (locationMatch) {
         resume.personal.location = locationMatch[1].trim();
       }
+    }
+  }
+
+  // If we haven't found website yet, check all URLs for portfolio/personal sites
+  if (!resume.personal.website && allUrls.length > 0) {
+    const portfolioUrl = allUrls.find(url => {
+      const lowerUrl = url.toLowerCase();
+      return !lowerUrl.includes('linkedin') && 
+             !lowerUrl.includes('github') && 
+             !lowerUrl.includes('leetcode') &&
+             (lowerUrl.includes('portfolio') || lowerUrl.includes('personal') || 
+              lowerUrl.match(/^https?:\/\/[^/]+$/)); // Simple domain without path
+    });
+    if (portfolioUrl) {
+      resume.personal.website = portfolioUrl.startsWith('http') ? portfolioUrl : 'https://' + portfolioUrl;
     }
   }
 

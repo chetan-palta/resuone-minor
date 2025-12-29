@@ -32,8 +32,29 @@ export async function parseResume(req, res) {
         const data = fs.readFileSync(file.path);
         // pdf-parse v2 uses class-based API: new PDFParse({ data }) then getText()
         const parser = new PDFParse({ data });
-        const result = await parser.getText();
+        // getText with hyperlinks enabled to include URLs in text
+        const result = await parser.getText({ hyperlinks: true });
         text = result.text;
+        
+        // Also try to get page links if available
+        try {
+          const info = await parser.getInfo({ parsePageInfo: true });
+          if (info && info.pages) {
+            // Extract URLs from page info if available
+            const pageLinks = [];
+            for (const page of info.pages) {
+              if (page.links) {
+                pageLinks.push(...page.links.map(link => link.url || link.uri || '').filter(Boolean));
+              }
+            }
+            if (pageLinks.length > 0) {
+              text += '\n' + pageLinks.join('\n');
+            }
+          }
+        } catch (linkError) {
+          // If link extraction fails, continue with text only
+          // The improved URL regex in parser.js will still catch URLs from text
+        }
       } else {
         // Cleanup and return error
         fs.unlinkSync(file.path);
