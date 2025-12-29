@@ -5,9 +5,9 @@ import { createRequire } from 'module';
 import { parseTextToResumeJson } from '../utils/parser.js';
 
 const require = createRequire(import.meta.url);
-// pdf-parse exports an object with PDFParse function
+// pdf-parse v2 exports PDFParse as a class
 const pdfParseModule = require('pdf-parse');
-const pdfParse = pdfParseModule.PDFParse || pdfParseModule.default || pdfParseModule;
+const PDFParse = pdfParseModule.PDFParse;
 
 export async function parseResume(req, res) {
   try {
@@ -30,8 +30,10 @@ export async function parseResume(req, res) {
         text = html.replace(/<[^>]+>/g, '\n').replace(/\n{2,}/g, '\n').trim();
       } else if (mime === 'application/pdf' || file.originalname.endsWith('.pdf')) {
         const data = fs.readFileSync(file.path);
-        const pdfData = await pdfParse(data);
-        text = pdfData.text;
+        // pdf-parse v2 uses class-based API: new PDFParse({ data }) then getText()
+        const parser = new PDFParse({ data });
+        const result = await parser.getText();
+        text = result.text;
       } else {
         // Cleanup and return error
         fs.unlinkSync(file.path);
