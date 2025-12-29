@@ -159,37 +159,37 @@ export function TwoColumnTemplate({ resume }: TemplateProps) {
           <h2 className="text-[10pt] font-bold uppercase tracking-wide mb-2 text-white/90">Contact</h2>
           <div className="space-y-1 text-[9pt] text-white/80">
             {personal.email && (
-              <div className="flex items-center gap-2">
-                <Mail className="w-3 h-3" />
-                <a href={`mailto:${personal.email}`} className="truncate">{personal.email}</a>
+              <div className="flex items-center gap-2" style={{ display: 'flex', alignItems: 'center' }}>
+                <Mail className="w-3 h-3 flex-shrink-0" style={{ display: 'inline-block', verticalAlign: 'middle' }} />
+                <a href={`mailto:${personal.email}`} className="truncate" style={{ display: 'inline-block', verticalAlign: 'middle' }}>{personal.email}</a>
               </div>
             )}
             {personal.phone && (
-              <div className="flex items-center gap-2">
-                <Phone className="w-3 h-3" />
-                <span>{personal.phone}</span>
+              <div className="flex items-center gap-2" style={{ display: 'flex', alignItems: 'center' }}>
+                <Phone className="w-3 h-3 flex-shrink-0" style={{ display: 'inline-block', verticalAlign: 'middle' }} />
+                <span style={{ display: 'inline-block', verticalAlign: 'middle' }}>{personal.phone}</span>
               </div>
             )}
             {personal.location && (
-              <div className="flex items-center gap-2">
-                <MapPin className="w-3 h-3" />
-                <span>{personal.location}</span>
+              <div className="flex items-center gap-2" style={{ display: 'flex', alignItems: 'center' }}>
+                <MapPin className="w-3 h-3 flex-shrink-0" style={{ display: 'inline-block', verticalAlign: 'middle' }} />
+                <span style={{ display: 'inline-block', verticalAlign: 'middle' }}>{personal.location}</span>
               </div>
             )}
             {personal.linkedin && (
-              <div className="flex items-center gap-2">
-                <Linkedin className="w-3 h-3" />
-                <a href={personal.linkedin.startsWith('http') ? personal.linkedin : `https://${personal.linkedin}`} className="truncate">LinkedIn</a>
+              <div className="flex items-center gap-2" style={{ display: 'flex', alignItems: 'center' }}>
+                <Linkedin className="w-3 h-3 flex-shrink-0" style={{ display: 'inline-block', verticalAlign: 'middle' }} />
+                <a href={personal.linkedin.startsWith('http') ? personal.linkedin : `https://${personal.linkedin}`} className="truncate" style={{ display: 'inline-block', verticalAlign: 'middle' }}>LinkedIn</a>
               </div>
             )}
             {personal.github && (
-              <div className="flex items-center gap-2">
-                <Github className="w-3 h-3" />
-                <a href={personal.github.startsWith('http') ? personal.github : `https://${personal.github}`} className="truncate">GitHub</a>
+              <div className="flex items-center gap-2" style={{ display: 'flex', alignItems: 'center' }}>
+                <Github className="w-3 h-3 flex-shrink-0" style={{ display: 'inline-block', verticalAlign: 'middle' }} />
+                <a href={personal.github.startsWith('http') ? personal.github : `https://${personal.github}`} className="truncate" style={{ display: 'inline-block', verticalAlign: 'middle' }}>GitHub</a>
               </div>
             )}
             {personal.website && (
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2" style={{ display: 'flex', alignItems: 'center' }}>
                 <Globe className="w-3 h-3" />
                 <a href={personal.website.startsWith('http') ? personal.website : `https://${personal.website}`} className="truncate">Website</a>
               </div>
