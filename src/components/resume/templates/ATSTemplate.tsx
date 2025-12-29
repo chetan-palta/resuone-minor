@@ -59,7 +59,7 @@ export function ATSTemplate({ resume }: TemplateProps) {
       case "skills":
         return skills.length > 0 && (
           <section key="skills" className="mb-4">
-            <h2 className="text-[12pt] font-bold uppercase mb-2 border-b border-gray-400 pb-1">
+            <h2 className="text-[12pt] font-bold uppercase mb-2 border-b border-gray-400 pb-1" style={{ display: 'block', width: '100%', borderBottomWidth: '1px', borderBottomStyle: 'solid' }}>
               Skills
             </h2>
             {skills.map((category) => (
@@ -74,7 +74,7 @@ export function ATSTemplate({ resume }: TemplateProps) {
       case "projects":
         return projects.length > 0 && (
           <section key="projects" className="mb-4">
-            <h2 className="text-[12pt] font-bold uppercase mb-2 border-b border-gray-400 pb-1">
+            <h2 className="text-[12pt] font-bold uppercase mb-2 border-b border-gray-400 pb-1" style={{ display: 'block', width: '100%', borderBottomWidth: '1px', borderBottomStyle: 'solid' }}>
               Projects
             </h2>
             {projects.map((project) => (
@@ -99,7 +99,7 @@ export function ATSTemplate({ resume }: TemplateProps) {
       case "certifications":
         return certifications.length > 0 && (
           <section key="certifications" className="mb-4">
-            <h2 className="text-[12pt] font-bold uppercase mb-2 border-b border-gray-400 pb-1">
+            <h2 className="text-[12pt] font-bold uppercase mb-2 border-b border-gray-400 pb-1" style={{ display: 'block', width: '100%', borderBottomWidth: '1px', borderBottomStyle: 'solid' }}>
               Certifications
             </h2>
             {certifications.map((cert) => (
@@ -144,7 +144,7 @@ export function ATSTemplate({ resume }: TemplateProps) {
       {/* Summary */}
       {personal.summary && (
         <section className="mb-4">
-          <h2 className="text-[12pt] font-bold uppercase mb-2 border-b border-gray-400 pb-1">
+          <h2 className="text-[12pt] font-bold uppercase mb-2 border-b border-gray-400 pb-1" style={{ display: 'block', width: '100%', borderBottomWidth: '1px', borderBottomStyle: 'solid' }}>
             Professional Summary
           </h2>
           <p className="text-[10pt]">{personal.summary}</p>
