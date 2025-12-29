@@ -163,33 +163,49 @@ export function parseTextToResumeJson(text) {
     const line = lines[i];
     const lower = line.toLowerCase().trim();
 
-    // Detect section headers
-    if (/^(experience|work experience|professional experience|employment|work history)$/.test(lower)) {
+    // Detect section headers - improved pattern matching
+    // Check for headers that might be in ALL CAPS, Title Case, or with colons
+    const headerPattern = /^[A-Z\s:]+$/;
+    const isLikelyHeader = headerPattern.test(line) && line.length < 50 && line.split(' ').length <= 5;
+    
+    // Experience section
+    if (/^(experience|work experience|professional experience|employment|work history|employment history|professional background)/i.test(lower) || 
+        (isLikelyHeader && /experience|employment|work/i.test(lower))) {
       currentSection = 'experience';
       inSummary = false;
       continue;
     }
-    if (/^(education|academic|academic background)$/.test(lower)) {
+    // Education section
+    if (/^(education|academic|academic background|academic qualifications|qualifications|educational background)/i.test(lower) ||
+        (isLikelyHeader && /education|academic|qualification/i.test(lower))) {
       currentSection = 'education';
       inSummary = false;
       continue;
     }
-    if (/^(projects?|project experience)$/.test(lower)) {
+    // Projects section
+    if (/^(projects?|project experience|personal projects|side projects|portfolio projects)/i.test(lower) ||
+        (isLikelyHeader && /project/i.test(lower))) {
       currentSection = 'projects';
       inSummary = false;
       continue;
     }
-    if (/^(skills?|technical skills|core competencies)$/.test(lower)) {
+    // Skills section
+    if (/^(skills?|technical skills|core competencies|competencies|technical competencies|key skills)/i.test(lower) ||
+        (isLikelyHeader && /skill|competenc/i.test(lower))) {
       currentSection = 'skills';
       inSummary = false;
       continue;
     }
-    if (/^(certifications?|certificates?|certification)$/.test(lower)) {
+    // Certifications section
+    if (/^(certifications?|certificates?|certification|certifications and licenses)/i.test(lower) ||
+        (isLikelyHeader && /certif/i.test(lower))) {
       currentSection = 'certifications';
       inSummary = false;
       continue;
     }
-    if (/^(summary|objective|profile|about)$/.test(lower)) {
+    // Summary/Objective section
+    if (/^(summary|objective|profile|about|professional summary|career objective|executive summary)/i.test(lower) ||
+        (isLikelyHeader && /summary|objective|profile|about/i.test(lower))) {
       currentSection = null;
       inSummary = true;
       continue;

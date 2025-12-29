@@ -6,6 +6,37 @@ import { Badge } from "@/components/ui/badge";
 import { toast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 
+// Fallback keyword suggestions when AI service is unavailable
+function getFallbackKeywords(context: string): string[] {
+  const lower = context.toLowerCase();
+  const keywords: string[] = [];
+  
+  // Software Engineering
+  if (lower.includes('software') || lower.includes('developer') || lower.includes('engineer')) {
+    keywords.push('JavaScript', 'Python', 'React', 'Node.js', 'Git', 'REST APIs', 'Agile', 'TypeScript');
+  }
+  // Data Science
+  if (lower.includes('data') || lower.includes('analyst') || lower.includes('scientist')) {
+    keywords.push('Python', 'SQL', 'Machine Learning', 'Data Analysis', 'Pandas', 'NumPy', 'Tableau', 'Statistics');
+  }
+  // Web Development
+  if (lower.includes('web') || lower.includes('frontend') || lower.includes('backend')) {
+    keywords.push('HTML', 'CSS', 'JavaScript', 'React', 'Node.js', 'Responsive Design', 'REST APIs', 'Git');
+  }
+  // Mobile Development
+  if (lower.includes('mobile') || lower.includes('ios') || lower.includes('android')) {
+    keywords.push('React Native', 'Swift', 'Kotlin', 'Mobile UI/UX', 'App Development', 'iOS', 'Android', 'Flutter');
+  }
+  // DevOps
+  if (lower.includes('devops') || lower.includes('cloud') || lower.includes('infrastructure')) {
+    keywords.push('AWS', 'Docker', 'Kubernetes', 'CI/CD', 'Linux', 'Terraform', 'Jenkins', 'Git');
+  }
+  // General tech
+  keywords.push('Problem Solving', 'Team Collaboration', 'Communication', 'Project Management');
+  
+  return keywords.length > 0 ? keywords : ['Problem Solving', 'Team Collaboration', 'Communication', 'Leadership', 'Project Management', 'Analytical Skills', 'Time Management', 'Adaptability'];
+}
+
 interface AIKeywordSuggestionsProps {
   onAddKeyword: (keyword: string) => void;
   existingSkills?: string[];
@@ -28,7 +59,21 @@ export function AIKeywordSuggestions({ onAddKeyword, existingSkills = [] }: AIKe
         body: { type: "keywords", context: context.trim() },
       });
 
-      if (error) throw error;
+      if (error) {
+        // Edge function might not be deployed or configured
+        console.warn("AI suggestions edge function error:", error);
+        // Provide fallback suggestions based on common keywords
+        const fallbackKeywords = getFallbackKeywords(context.trim());
+        setSuggestions(fallbackKeywords.filter(
+          (k) => !existingSkills.some((s) => s.toLowerCase() === k.toLowerCase())
+        ).slice(0, 8));
+        toast({
+          title: "Using fallback suggestions",
+          description: "AI service unavailable. Showing common keywords for this role.",
+          variant: "default",
+        });
+        return;
+      }
 
       let keywords: string[] = [];
       try {
@@ -46,10 +91,15 @@ export function AIKeywordSuggestions({ onAddKeyword, existingSkills = [] }: AIKe
       setSuggestions(newKeywords.slice(0, 8));
     } catch (error: any) {
       console.error("AI suggestions error:", error);
+      // Provide fallback on any error
+      const fallbackKeywords = getFallbackKeywords(context.trim());
+      setSuggestions(fallbackKeywords.filter(
+        (k) => !existingSkills.some((s) => s.toLowerCase() === k.toLowerCase())
+      ).slice(0, 8));
       toast({
-        title: "Failed to get suggestions",
-        description: error.message || "Please try again",
-        variant: "destructive",
+        title: "Using fallback suggestions",
+        description: "AI service unavailable. Showing common keywords for this role.",
+        variant: "default",
       });
     } finally {
       setIsLoading(false);

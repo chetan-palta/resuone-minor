@@ -47,15 +47,16 @@ const Index = () => {
   const handleCreateResume = () => {
     if (loading) return;
     
+    // Allow users to start building without sign-up
+    // Sign-up is only required for saving
+    navigate("/edit");
+    
     if (!isAuthenticated) {
       toast({
-        title: "Sign in required",
-        description: "Please sign in to create and save your resume.",
+        title: "Start building your resume",
+        description: "You can start building now. Sign in to save and access your resumes from anywhere.",
         variant: "default",
       });
-      navigate("/auth");
-    } else {
-      navigate("/edit");
     }
   };
 
