@@ -32,8 +32,8 @@ export async function parseResume(req, res) {
         const data = fs.readFileSync(file.path);
         // pdf-parse v2 uses class-based API: new PDFParse({ data }) then getText()
         const parser = new PDFParse({ data });
-        // getText with hyperlinks enabled to include URLs in text
-        const result = await parser.getText({ hyperlinks: true });
+        // getText with parseHyperlinks enabled to include URLs in text as markdown links
+        const result = await parser.getText({ parseHyperlinks: true });
         text = result.text;
         
         // Also try to get page links if available
