@@ -150,10 +150,9 @@ export function ATSTemplate({ resume }: TemplateProps) {
         </div>
         {(personal.linkedin || personal.github || personal.website) && (
           <div className="text-[10pt]">
-            {[
-              personal.linkedin && (
+            {personal.linkedin && (
+              <>
                 <a 
-                  key="linkedin"
                   href={personal.linkedin.startsWith('http') ? personal.linkedin : `https://${personal.linkedin}`}
                   className="text-blue-600 hover:underline"
                   target="_blank"
@@ -161,10 +160,12 @@ export function ATSTemplate({ resume }: TemplateProps) {
                 >
                   LinkedIn
                 </a>
-              ),
-              personal.github && (
+                {(personal.github || personal.website) && ' | '}
+              </>
+            )}
+            {personal.github && (
+              <>
                 <a 
-                  key="github"
                   href={personal.github.startsWith('http') ? personal.github : `https://${personal.github}`}
                   className="text-blue-600 hover:underline"
                   target="_blank"
@@ -172,24 +173,19 @@ export function ATSTemplate({ resume }: TemplateProps) {
                 >
                   GitHub
                 </a>
-              ),
-              personal.website && (
-                <a 
-                  key="website"
-                  href={personal.website.startsWith('http') ? personal.website : `https://${personal.website}`}
-                  className="text-blue-600 hover:underline"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Website
-                </a>
-              ),
-            ].filter(Boolean).map((link, index, array) => (
-              <span key={index}>
-                {link}
-                {index < array.length - 1 && ' | '}
-              </span>
-            ))}
+                {personal.website && ' | '}
+              </>
+            )}
+            {personal.website && (
+              <a 
+                href={personal.website.startsWith('http') ? personal.website : `https://${personal.website}`}
+                className="text-blue-600 hover:underline"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Website
+              </a>
+            )}
           </div>
         )}
       </header>
