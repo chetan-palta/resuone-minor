@@ -70,6 +70,20 @@ app.post('/api/parse-resume', parseLimiter, upload.single('file'), parseResume);
 app.post('/api/analyze-resume', analyzeResume);
 app.post('/api/save-imported-resume', saveImportedResume);
 
+// Root route
+app.get('/', (req, res) => {
+  res.json({
+    name: 'ResuOne API',
+    status: 'running',
+    endpoints: {
+      health: '/health',
+      parseResume: 'POST /api/parse-resume',
+      analyzeResume: 'POST /api/analyze-resume',
+      saveImportedResume: 'POST /api/save-imported-resume'
+    }
+  });
+});
+
 // Health check
 app.get('/health', (req, res) => {
   res.json({ status: 'ok' });

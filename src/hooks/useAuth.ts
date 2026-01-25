@@ -8,36 +8,58 @@ export function useAuth() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Set up auth state listener FIRST
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        // Only log important events (not INITIAL_SESSION)
-        if (event !== 'INITIAL_SESSION') {
-          console.log('Auth state changed:', event, session?.user?.email || 'No user');
+    let subscription: { unsubscribe: () => void } | null = null;
+    
+    try {
+      // Set up auth state listener FIRST
+      const { data } = supabase.auth.onAuthStateChange(
+        async (event, session) => {
+          // Only log important events (not INITIAL_SESSION)
+          if (event !== 'INITIAL_SESSION') {
+            console.log('Auth state changed:', event, session?.user?.email || 'No user');
+          }
+          setSession(session);
+          setUser(session?.user ?? null);
+          setLoading(false);
+          
+          // Handle OAuth callback
+          if (event === 'SIGNED_IN' && session) {
+            console.log('✅ User signed in:', session.user.email);
+          }
+        }
+      );
+      subscription = data.subscription;
+
+      // THEN check for existing session
+      supabase.auth.getSession().then(({ data: { session }, error }) => {
+        if (error) {
+          console.warn('Auth session check failed:', error.message);
+        }
+        // Only log if there's a session (not on initial load)
+        if (session?.user) {
+          console.log('✅ Session found:', session.user.email);
         }
         setSession(session);
         setUser(session?.user ?? null);
         setLoading(false);
-        
-        // Handle OAuth callback
-        if (event === 'SIGNED_IN' && session) {
-          console.log('✅ User signed in:', session.user.email);
-        }
-      }
-    );
-
-    // THEN check for existing session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      // Only log if there's a session (not on initial load)
-      if (session?.user) {
-        console.log('✅ Session found:', session.user.email);
-      }
-      setSession(session);
-      setUser(session?.user ?? null);
+      }).catch((err) => {
+        console.warn('Auth error:', err);
+        setLoading(false);
+      });
+    } catch (err) {
+      console.warn('Auth initialization error:', err);
       setLoading(false);
-    });
+    }
 
-    return () => subscription.unsubscribe();
+    // Set a timeout to ensure loading state doesn't get stuck
+    const timeout = setTimeout(() => {
+      setLoading(false);
+    }, 3000);
+
+    return () => {
+      subscription?.unsubscribe();
+      clearTimeout(timeout);
+    };
   }, []);
 
   const signUp = useCallback(async (email: string, password: string, fullName?: string) => {

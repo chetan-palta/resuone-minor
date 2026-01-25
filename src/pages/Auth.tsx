@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { FileText, Mail, Lock, User, ArrowLeft } from "lucide-react";
+import { FileText, Mail, Lock, User, ArrowLeft, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase, isSupabaseConfigured } from "@/integrations/supabase/client";
 
 const Auth = () => {
   const [isSignUp, setIsSignUp] = useState(false);
@@ -149,6 +149,34 @@ const Auth = () => {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
+  // Show message if Supabase is not configured
+  if (!isSupabaseConfigured) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center p-8">
+        <div className="max-w-md text-center">
+          <div className="w-16 h-16 rounded-full bg-yellow-100 dark:bg-yellow-900/30 flex items-center justify-center mx-auto mb-6">
+            <AlertTriangle className="w-8 h-8 text-yellow-600 dark:text-yellow-500" />
+          </div>
+          <h1 className="text-2xl font-bold mb-4">Authentication Not Available</h1>
+          <p className="text-muted-foreground mb-6">
+            The authentication service is not configured. You can still create and export resumes without signing in.
+          </p>
+          <div className="space-y-3">
+            <Button asChild className="w-full" variant="hero">
+              <Link to="/edit">Create Resume</Link>
+            </Button>
+            <Button asChild variant="outline" className="w-full">
+              <Link to="/">Back to Home</Link>
+            </Button>
+          </div>
+          <p className="mt-6 text-sm text-muted-foreground">
+            To enable authentication, set up a Supabase project and configure the environment variables.
+          </p>
+        </div>
       </div>
     );
   }
