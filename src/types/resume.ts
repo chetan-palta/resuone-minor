@@ -67,6 +67,17 @@ export interface Certification {
   link?: string;
 }
 
+export interface TextLink {
+  text: string;
+  url: string;
+}
+
+export interface Activity {
+  id: string;
+  content: string; // Max 100 words, can contain links
+  links?: TextLink[]; // Array of text ranges that are clickable
+}
+
 export interface ResumeSection {
   id: string;
   type: 'personal' | 'education' | 'experience' | 'skills' | 'projects' | 'certifications';
@@ -74,7 +85,7 @@ export interface ResumeSection {
   order: number;
 }
 
-export type TemplateId = 'minimal' | 'professional' | 'modern' | 'ats' | 'two-column';
+export type TemplateId = 'minimal' | 'professional' | 'modern' | 'ats' | 'two-column' | 'tnp-faang';
 
 export interface ResumeData {
   id?: string;
@@ -89,6 +100,7 @@ export interface ResumeData {
   skills: Skill[];
   projects: Project[];
   certifications: Certification[];
+  activities?: Activity[];
   metadata?: ResumeMetadata;
   createdAt?: string;
   updatedAt?: string;
@@ -122,6 +134,7 @@ export const DEFAULT_RESUME: ResumeData = {
   skills: [],
   projects: [],
   certifications: [],
+  activities: [],
 };
 
 export const TEMPLATE_OPTIONS = [
@@ -130,6 +143,7 @@ export const TEMPLATE_OPTIONS = [
   { id: 'modern', name: 'Modern', description: 'Contemporary with subtle accents' },
   { id: 'ats', name: 'ATS-Friendly', description: 'Optimized for applicant tracking systems' },
   { id: 'two-column', name: 'Two Column', description: 'Efficient space utilization' },
+  { id: 'tnp-faang', name: 'TNP FAANG', description: 'Optimized for FAANG-level companies' },
 ] as const;
 
 export const FONT_OPTIONS = [

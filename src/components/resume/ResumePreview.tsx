@@ -5,6 +5,7 @@ import { ProfessionalTemplate } from "./templates/ProfessionalTemplate";
 import { ModernTemplate } from "./templates/ModernTemplate";
 import { ATSTemplate } from "./templates/ATSTemplate";
 import { TwoColumnTemplate } from "./templates/TwoColumnTemplate";
+import { TNPFaangTemplate } from "./templates/TNPFaangTemplate";
 
 interface ResumePreviewProps {
   resume: ResumeData;
@@ -25,6 +26,8 @@ export function ResumePreview({ resume }: ResumePreviewProps) {
         return <ATSTemplate resume={resume} />;
       case "two-column":
         return <TwoColumnTemplate resume={resume} />;
+      case "tnp-faang":
+        return <TNPFaangTemplate resume={resume} />;
       default:
         return <ProfessionalTemplate resume={resume} />;
     }

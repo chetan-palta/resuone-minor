@@ -319,7 +319,7 @@ export default function Editor() {
       {/* Main Content */}
       <div className="flex-1 flex overflow-hidden">
         {/* Form Panel */}
-        <div className={`flex-1 overflow-y-auto ${showPreview ? "hidden md:block md:w-1/2 lg:w-2/5" : "w-full"}`}>
+        <div className={`flex-1 overflow-y-auto ${showPreview ? "hidden md:block md:w-1/2 lg:w-2/5" : "w-full"}`} style={{ maxHeight: "calc(100vh - 120px)" }}>
           <div className="container mx-auto p-4 md:p-6 max-w-2xl">
             <ResumeForm store={store} />
           </div>

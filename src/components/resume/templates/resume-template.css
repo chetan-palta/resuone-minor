@@ -1,0 +1,336 @@
+/* ================================================
+   GLOBAL RESET & BASE STYLES
+   ================================================ */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #f0f0f0;
+    /* Backdrop for browser view */
+    color: #333;
+    font-size: 10pt;
+    /* Standard resume font size */
+    -webkit-font-smoothing: antialiased;
+}
+
+/* ================================================
+   CANONICAL CONTAINER (A4/Letter)
+   ================================================ */
+.resume-container {
+    width: 8.5in;
+    height: 11in;
+    max-height: 11in;
+    margin: 0 auto;
+    background-color: #fff;
+    padding: 0.4in 0.5in;
+    /* Tight margins for college TNP cell */
+    font-family: Georgia, 'Times New Roman', serif;
+    color: #000;
+    position: relative;
+    overflow: hidden;
+    /* Enforce single-page limit */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    /* Browser view shadow */
+}
+
+/* ================================================
+   TYPOGRAPHY
+   ================================================ */
+h1,
+h2,
+p,
+ul,
+li {
+    font-family: Georgia, 'Times New Roman', serif;
+    line-height: 1.25;
+}
+
+strong {
+    font-weight: bold;
+}
+
+em {
+    font-style: italic;
+}
+
+a {
+    color: #000;
+    text-decoration: none;
+    border-bottom: 0.25pt solid #666;
+    /* Subtle prompt for clickability */
+}
+
+/* ================================================
+   HEADER
+   ================================================ */
+.header {
+    text-align: center;
+    padding-bottom: 8pt;
+}
+
+.name {
+    font-size: 18pt;
+    font-weight: bold;
+    text-transform: uppercase;
+    padding-bottom: 4pt;
+}
+
+.contact-links {
+    font-size: 9pt;
+}
+
+.contact-links a:hover {
+    border-bottom: 1pt solid #000;
+}
+
+/* ================================================
+   SECTIONS & DIVIDERS
+   ================================================ */
+.section {
+    padding-top: 6pt;
+}
+
+.section-heading {
+    font-size: 11pt;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.5pt;
+}
+
+/* Dividers MUST be standalone block-level divs */
+.divider {
+    display: block;
+    width: 100%;
+    height: 1pt;
+    background-color: #000 !important;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+}
+
+/* Spacing controlled ONLY via padding */
+.spacer-sm {
+    padding-top: 4pt;
+}
+
+.spacer-xs {
+    padding-top: 2pt;
+}
+
+/* ================================================
+   CAREER SUMMARY
+   ================================================ */
+.summary-container {
+    padding-bottom: 2pt;
+}
+
+.summary-text {
+    text-align: justify;
+    font-size: 9.5pt;
+}
+
+/* ================================================
+   LAYOUT UTILITIES
+   ================================================ */
+.flex-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.timeline {
+    font-size: 9pt;
+    text-align: right;
+    white-space: nowrap;
+    padding-left: 10pt;
+}
+
+/* ================================================
+   EDUCATION
+   ================================================ */
+.education-entry {
+    padding-bottom: 4pt;
+}
+
+.education-title {
+    font-size: 10pt;
+}
+
+.education-details {
+    font-size: 9.5pt;
+    padding-top: 1pt;
+}
+
+/* ================================================
+   SKILLS
+   ================================================ */
+.skill-row {
+    padding-bottom: 2pt;
+    font-size: 9.5pt;
+}
+
+.small-bullet {
+    font-size: 8pt;
+    vertical-align: middle;
+    padding-right: 4pt;
+}
+
+/* ================================================
+   PROJECTS
+   ================================================ */
+.project-entry {
+    padding-bottom: 2pt;
+}
+
+.project-header {
+    font-size: 10pt;
+    display: flex;
+    align-items: baseline;
+    flex-grow: 1;
+}
+
+.project-links-inline {
+    margin-left: 8pt;
+    font-size: 8.5pt;
+}
+
+.project-description {
+    font-size: 9.5pt;
+    text-align: justify;
+    padding-top: 1pt;
+}
+
+.tech-line-inline {
+    font-size: 9pt;
+    display: inline;
+}
+
+/* ================================================
+   EXPERIENCE / BULLETS
+   ================================================ */
+.experience-entry {
+    padding-bottom: 2pt;
+}
+
+.company-name {
+    font-size: 10pt;
+}
+
+.role-title {
+    font-size: 9.5pt;
+    padding-top: 1pt;
+}
+
+.work-mode {
+    font-size: 9pt;
+    padding-bottom: 2pt;
+}
+
+/* Bullet alignment fix: list-style-position: inside with text alignment */
+.experience-bullets,
+.activities-list {
+    list-style-type: disc;
+    list-style-position: inside;
+}
+
+.experience-bullets li,
+.activities-list li {
+    padding-left: 1.25em;
+    /* Create space for bullet */
+    text-indent: -1.25em;
+    /* Pull first line back into padding */
+    padding-bottom: 2pt;
+    font-size: 9.5pt;
+    text-align: justify;
+}
+
+/* ================================================
+   PRINT REFINEMENTS (PDF/EXPORT ONLY)
+   ================================================ */
+@page {
+    size: A4;
+    margin: 0;
+}
+
+@media print {
+    body {
+        background-color: #fff !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    .resume-container {
+        width: 8.5in !important;
+        /* Force standard width */
+        height: 11in !important;
+        /* Force standard height */
+        margin: 0 auto !important;
+        padding: 0.2in 0.25in !important;
+        box-shadow: none !important;
+        overflow: hidden !important;
+        page-break-after: avoid;
+        break-after: avoid;
+    }
+
+    /* Reduce vertical spacing for print */
+    .section {
+        padding-top: 4pt !important;
+    }
+
+    .spacer-sm {
+        padding-top: 2pt !important;
+    }
+
+    .spacer-xs {
+        padding-top: 1pt !important;
+    }
+
+    .project-entry,
+    .experience-entry,
+    .education-entry {
+        padding-bottom: 2pt !important;
+    }
+
+    /* Prevent sections from splitting across pages */
+    .section {
+        page-break-inside: avoid;
+        break-inside: avoid;
+        display: block;
+        /* Ensure block context for break guards */
+    }
+
+    /* Heading orphan protection */
+    .section-heading {
+        page-break-after: avoid;
+        break-after: avoid;
+    }
+
+    /* Solidify dividers for all PDF engines */
+    .divider {
+        visibility: visible !important;
+        display: block !important;
+        background-color: #000 !important;
+        height: 1pt !important;
+        min-height: 1pt !important;
+        border: none !important;
+        margin: 0 !important;
+    }
+
+    /* Link behavior in PDF */
+    a {
+        border-bottom: none !important;
+        text-decoration: none !important;
+        color: #000 !important;
+    }
+
+    /* Ensure spacers are respected */
+    .spacer-sm,
+    .spacer-xs {
+        display: block !important;
+        height: auto !important;
+    }
+}

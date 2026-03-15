@@ -120,7 +120,7 @@ export function ExperienceForm({ data, onAdd, onUpdate, onRemove }: ExperienceFo
           <div className="space-y-2">
             <Label>Key Achievements (one per line)</Label>
             <Textarea
-              placeholder="• Led a team of 5 engineers to deliver the project on time&#10;• Increased system performance by 40%&#10;• Implemented CI/CD pipeline reducing deployment time by 60%"
+              placeholder={"• Led a team of 5 engineers to deliver the project on time\n• Increased system performance by 40%\n• Implemented CI/CD pipeline reducing deployment time by 60%"}
               rows={4}
               value={exp.achievements.join("\n")}
               onChange={(e) => handleAchievementChange(exp.id, e.target.value)}
